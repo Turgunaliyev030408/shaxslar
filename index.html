@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shaxslar</title>
+
+  <!-- Link to Tailwind CSS hosted version -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+
+</head>
+<body class="font-sans bg-gray-100">
+
+  <div class="container mx-auto p-8">
+    <h1 class="text-4xl text-center font-bold text-gray-800 mb-8">Shaxslar</h1>
+
+    <form id="shaxsForm" class="max-w-md mx-auto bg-white p-8 rounded-md shadow-md">
+      <div class="mb-4">
+        <label for="familya" class="block text-sm font-medium text-gray-600 mb-2">Familya:</label>
+        <input type="text" id="familya" name="familya" required class="w-full px-3 py-2 border rounded-md focus:outline-none focus:border-blue-500">
+      </div>
+      <div class="mb-6">
+        <label for="ism" class="block text-sm font-medium text-gray-600 mb-2">Ism:</label>
+        <input type="text" id="ism" name="ism" required class="w-full px-3 py-2 border rounded-md focus:outline-none focus:border-blue-500">
+      </div>
+      <button type="button" onclick="qoshish()" class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 focus:outline-none focus:border-green-700">Qo'shish</button>
+    </form>
+
+    <ul id="shaxslarList" class="mt-8 space-y-4"></ul>
+  </div>
+
+  <script>
+    function shaxslarniOlish() {
+      const shaxslar = JSON.parse(localStorage.getItem('shaxslar')) || [];
+
+      const shaxslarList = document.getElementById('shaxslarList');
+      shaxslarList.innerHTML = '';
+
+      shaxslar.forEach((shaxs, index) => {
+        const listItem = document.createElement('li');
+        listItem.textContent = `Familya: ${shaxs.familya}, Ism: ${shaxs.ism}`;
+        
+        const updateButton = document.createElement('button');
+        updateButton.textContent = 'Yangilash';
+        updateButton.style.backgroundColor = '#3490dc';
+        updateButton.style.color = 'white';
+        updateButton.style.padding = '5px 10px';
+        updateButton.style.border = 'none';
+        updateButton.style.borderRadius = '5px';
+        updateButton.style.marginRight = '5px';
+        updateButton.addEventListener('click', () => yangilash(index));
+
+        const deleteButton = document.createElement('button');
+        deleteButton.textContent = 'O\'chirish';
+        deleteButton.style.backgroundColor = '#e3342f';
+        deleteButton.style.color = 'white';
+        deleteButton.style.padding = '5px 10px';
+        deleteButton.style.border = 'none';
+        deleteButton.style.borderRadius = '5px';
+        deleteButton.style.marginRight = '5px';
+        deleteButton.addEventListener('click', () => oChirish(index));
+
+        listItem.appendChild(updateButton);
+        listItem.appendChild(deleteButton);
+
+        shaxslarList.appendChild(listItem);
+      });
+    }
+
+    function qoshish() {
+      const familya = document.getElementById('familya').value;
+      const ism = document.getElementById('ism').value;
+
+      const shaxslar = JSON.parse(localStorage.getItem('shaxslar')) || [];
+      shaxslar.push({ familya, ism });
+      localStorage.setItem('shaxslar', JSON.stringify(shaxslar));
+
+      shaxslarniOlish();
+    }
+
+    function yangilash(index) {
+      const shaxslar = JSON.parse(localStorage.getItem('shaxslar')) || [];
+      const { familya, ism } = shaxslar[index];
+
+      const updatedFamilya = prompt('Yangi familya:', familya);
+      const updatedIsm = prompt('Yangi ism:', ism);
+
+      shaxslar[index] = { familya: updatedFamilya, ism: updatedIsm };
+      localStorage.setItem('shaxslar', JSON.stringify(shaxslar));
+
+      shaxslarniOlish();
+    }
+
+    function oChirish(index) {
+      const shaxslar = JSON.parse(localStorage.getItem('shaxslar')) || [];
+      shaxslar.splice(index, 1);
+      localStorage.setItem('shaxslar', JSON.stringify(shaxslar));
+
+      shaxslarniOlish();
+    }
+
+    shaxslarniOlish();
+  </script>
+
+</body>
+</html>
